@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Snake</string>
+    <string name="about">This game was purely created using\nJetpack Compose</string>
+    <string name="made_by">\u00A9 2022 made by RikoDev, all rights reserved</string>
+</resources>
