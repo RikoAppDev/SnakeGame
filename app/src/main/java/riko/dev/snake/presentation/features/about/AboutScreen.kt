@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,9 @@ import riko.dev.snake.presentation.ui.theme.Grey
 
 @Composable
 fun AboutScreen(navController: NavController) {
+    val uriHandler = LocalUriHandler.current
+    val sourceCodeUri = stringResource(id = R.string.github_url)
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
             TopAppBar(
@@ -85,11 +89,10 @@ fun AboutScreen(navController: NavController) {
                     ) {
                         Box(modifier = Modifier
                             .clickable {
-
+                                uriHandler.openUri(sourceCodeUri)
                             }
                             .padding(12.dp)
-                        )
-                        {
+                        ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center,
@@ -98,13 +101,15 @@ fun AboutScreen(navController: NavController) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_github_logo),
                                     contentDescription = "github logo",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colors.onBackground
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Source code",
                                     fontSize = 16.sp,
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onBackground
                                 )
                             }
                         }
