@@ -3,6 +3,7 @@ package riko.dev.snake.presentation.features.leaderboard
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -13,11 +14,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import riko.dev.snake.presentation.features.leaderboard.components.PlayerScoreItem
 import riko.dev.snake.presentation.ui.theme.Grey
 
 @Composable
 fun LeaderboardScreen(navController: NavController) {
+    val leaderboardViewModel: LeaderboardViewModel = viewModel()
+    val state = leaderboardViewModel.state.value
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
             TopAppBar(
@@ -42,7 +48,31 @@ fun LeaderboardScreen(navController: NavController) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     TableHeader()
                     LazyColumn {
-
+                        items(state.leaderboardData) {
+                            if (it.name != "" && it.score != 0)
+                                PlayerScoreItem(
+                                    modifier = Modifier,
+                                    name = it.name,
+                                    score = it.score
+                                )
+                        }
+                    }
+                }
+                if (state.error != null) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = state.error,
+                            color = MaterialTheme.colors.error,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                        )
+                    }
+                }
+                if (state.isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = MaterialTheme.colors.secondary)
                     }
                 }
             }
