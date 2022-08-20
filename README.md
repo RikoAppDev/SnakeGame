@@ -6,7 +6,7 @@ Simple snake game for Android created using Jetpack Compose
 
 ### Apk file
 
-Download apk file here [🐍](https://drive.google.com/file/d/1sBzTlNnAbXeZapP8dQAkmgm-ppkQZRUg/view?usp=sharing)
+Download apk file here [🐍](https://drive.google.com/drive/folders/1VPQp1ToMPm9KdolQdO-2iLOF65FEULd2?usp=sharing)
 
 ### License
 
