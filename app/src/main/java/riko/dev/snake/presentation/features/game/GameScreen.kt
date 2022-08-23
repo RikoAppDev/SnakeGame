@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,11 +24,15 @@ import riko.dev.snake.domain.game.Game
 import riko.dev.snake.domain.game.GameState
 import riko.dev.snake.domain.game.Move
 import riko.dev.snake.R
+import riko.dev.snake.presentation.navigation.Screen
 import riko.dev.snake.presentation.ui.theme.*
 
 @Composable
 fun GameScreen(game: Game, navController: NavController) {
     val state = game.state.collectAsState()
+    LaunchedEffect(key1 = true) {
+        game.reinitialize()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -55,6 +60,11 @@ fun GameScreen(game: Game, navController: NavController) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     StartButton(game = game)
                 }
+
+            if (state.value.gameOver) {
+                navController.navigate(Screen.GameOverScreen.withArgs(state.value.snake.size.toString()))
+                game.gameOver()
+            }
         }
     }
 }
@@ -99,7 +109,8 @@ fun Controls(onDirectionChange: (Move) -> Unit) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowUp,
                 contentDescription = "up",
-                modifier = Modifier.scale(2f)
+                modifier = Modifier.scale(2f),
+                tint = MaterialTheme.colors.onBackground
             )
         }
         Row {
@@ -107,7 +118,8 @@ fun Controls(onDirectionChange: (Move) -> Unit) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
                     contentDescription = "left",
-                    modifier = Modifier.scale(2f)
+                    modifier = Modifier.scale(2f),
+                    tint = MaterialTheme.colors.onBackground
                 )
             }
             Spacer(modifier = buttonSize)
@@ -115,7 +127,8 @@ fun Controls(onDirectionChange: (Move) -> Unit) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = "right",
-                    modifier = Modifier.scale(2f)
+                    modifier = Modifier.scale(2f),
+                    tint = MaterialTheme.colors.onBackground
                 )
             }
         }
@@ -123,7 +136,8 @@ fun Controls(onDirectionChange: (Move) -> Unit) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = "down",
-                modifier = Modifier.scale(2f)
+                modifier = Modifier.scale(2f),
+                tint = MaterialTheme.colors.onBackground
             )
         }
     }
@@ -219,4 +233,3 @@ fun Score(state: GameState) {
         )
     }
 }
-

@@ -1,9 +1,11 @@
 package riko.dev.snake.presentation.navigation.nav_graph
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import riko.dev.snake.domain.game.Game
 import riko.dev.snake.presentation.features.about.AboutScreen
 import riko.dev.snake.presentation.features.game.GameScreen
@@ -23,8 +25,18 @@ fun NavGraph(game: Game) {
         composable(route = Screen.GameScreen.route) {
             GameScreen(game = game, navController = navController)
         }
-        composable(route = Screen.GameOverScreen.route) {
-            GameOverScreen(navController = navController)
+        composable(
+            route = Screen.GameOverScreen.route + "/{score}",
+            arguments = listOf(
+                navArgument("score") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            GameOverScreen(
+                navController = navController,
+                score = it.arguments?.getInt("score")!!
+            )
         }
         composable(route = Screen.LeaderboardScreen.route) {
             LeaderboardScreen(navController = navController)

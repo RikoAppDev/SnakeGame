@@ -7,4 +7,13 @@ sealed class Screen(val route: String) {
     object LeaderboardScreen : Screen(route = "highest_score_screen")
     object SettingsScreen : Screen(route = "settings_screen")
     object AboutScreen : Screen(route = "about_screen")
+
+    fun withArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }

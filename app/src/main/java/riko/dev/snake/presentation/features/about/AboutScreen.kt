@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import riko.dev.snake.BuildConfig
 import riko.dev.snake.R
 import riko.dev.snake.presentation.ui.theme.Brown
 import riko.dev.snake.presentation.ui.theme.Grey
@@ -69,7 +70,7 @@ fun AboutScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "v1.0.0",
+                        text = "v${BuildConfig.VERSION_NAME}",
                         fontSize = 24.sp,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold
@@ -114,7 +115,6 @@ fun AboutScreen(navController: NavController) {
                             }
                         }
                     }
-
                 }
                 Text(
                     text = stringResource(id = R.string.made_by),

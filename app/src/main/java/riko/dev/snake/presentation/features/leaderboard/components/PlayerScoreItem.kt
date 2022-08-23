@@ -12,13 +12,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PlayerScoreItem(modifier: Modifier, name: String, score: Int) {
+fun PlayerScoreItem(modifier: Modifier, position: Int, name: String, score: Int) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(vertical = 24.dp, horizontal = 8.dp)
     ) {
+        Text(
+            text = "$position.",
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.weight(.3f)
+        )
         Text(
             text = name,
             fontSize = 24.sp,

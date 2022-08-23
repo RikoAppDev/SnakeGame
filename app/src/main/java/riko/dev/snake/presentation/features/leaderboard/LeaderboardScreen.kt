@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +52,7 @@ fun LeaderboardScreen(navController: NavController) {
                             if (it.name != "" && it.score != 0)
                                 PlayerScoreItem(
                                     modifier = Modifier,
+                                    position = state.leaderboardData.indexOf(it) + 1,
                                     name = it.name,
                                     score = it.score
                                 )
@@ -89,6 +90,12 @@ fun TableHeader() {
             .padding(24.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Text(
+            text = "#",
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.weight(.2f)
+        )
         Text(
             text = "Player name",
             fontSize = 24.sp,

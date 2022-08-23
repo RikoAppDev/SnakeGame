@@ -12,29 +12,8 @@ import kotlinx.coroutines.sync.withLock
 import kotlin.random.Random
 
 class Game(private val scope: CoroutineScope) {
-    private var initialMove = Move.values().random()
-    var initialState = GameState(
-        food = Pair(Random.nextInt(BOARD_SIZE), Random.nextInt(BOARD_SIZE)),
-        snake = arrayListOf(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2)).apply {
-            for (i in 1 until SNAKE_LENGTH) {
-                when {
-                    initialMove.coordinates.first == 1 -> {
-                        add(Pair(BOARD_SIZE / 2 - i, BOARD_SIZE / 2))
-                    }
-                    initialMove.coordinates.first == -1 -> {
-                        add(Pair(BOARD_SIZE / 2 + i, BOARD_SIZE / 2))
-                    }
-                    initialMove.coordinates.second == 1 -> {
-                        add(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2 - i))
-                    }
-                    initialMove.coordinates.second == -1 -> {
-                        add(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2 + i))
-                    }
-                }
-            }
-        },
-        running = false
-    )
+    private val initialMove = Move.values().random()
+    private var snakeLength = SNAKE_LENGTH
 
     private val mutex = Mutex()
     private val _state = MutableStateFlow(
@@ -58,7 +37,8 @@ class Game(private val scope: CoroutineScope) {
                     }
                 }
             },
-            running = false
+            running = false,
+            gameOver = false
         )
     )
     val state = _state.asStateFlow()
@@ -74,10 +54,9 @@ class Game(private val scope: CoroutineScope) {
 
     fun start() {
         scope.launch {
-            var snakeLength = SNAKE_LENGTH
             _state.value.running = true
 
-            while (_state.value.running) {
+            while (state.value.running) {
                 delay(150)
                 _state.update {
                     val newPosition = it.snake.first().let { position ->
@@ -98,9 +77,10 @@ class Game(private val scope: CoroutineScope) {
                         snakeLength++
 
                     if (it.snake.contains(newPosition)) {
-                        snakeLength = SNAKE_LENGTH
-                        end()
+                        _state.value.gameOver = true
                         _state.value.running = false
+                        Log.d("TEST", "hit: $move")
+                        Log.d("TEST", "hit: ${state.value}")
                     }
 
                     it.copy(
@@ -116,16 +96,44 @@ class Game(private val scope: CoroutineScope) {
         }
     }
 
-    private fun end() {
+    fun reinitialize() {
+        snakeLength = SNAKE_LENGTH
+        move = Move.values().random()
+
+        _state.value = GameState(
+            food = Pair(Random.nextInt(BOARD_SIZE), Random.nextInt(BOARD_SIZE)),
+            snake = arrayListOf(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2)).apply {
+                for (i in 1 until SNAKE_LENGTH) {
+                    when {
+                        move.coordinates.first == 1 -> {
+                            add(Pair(BOARD_SIZE / 2 - i, BOARD_SIZE / 2))
+                        }
+                        move.coordinates.first == -1 -> {
+                            add(Pair(BOARD_SIZE / 2 + i, BOARD_SIZE / 2))
+                        }
+                        move.coordinates.second == 1 -> {
+                            add(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2 - i))
+                        }
+                        move.coordinates.second == -1 -> {
+                            add(Pair(BOARD_SIZE / 2, BOARD_SIZE / 2 + i))
+                        }
+                    }
+                }
+            },
+            running = false,
+            gameOver = false
+        )
+
+        Log.d("TEST", "reinitialize: $move")
+        Log.d("TEST", "reinitialize: ${state.value}")
+    }
+
+    fun gameOver() {
         _state.update {
             it.copy(
-                food = initialState.food,
-                snake = initialState.snake,
-                running = initialState.running
+                gameOver = false
             )
         }
-        Log.d("TEST", "end: $move")
-        Log.d("TEST", "end: ${state.value}")
     }
 
     companion object {
